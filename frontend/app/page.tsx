@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
@@ -13,7 +13,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [remaining, setRemaining] = useState<number | null>(null);
+  const [remaining, setRemaining] = useState<number>(10);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const voices = [
@@ -23,6 +23,24 @@ export default function Home() {
     { id: "Brian", name: "Brian (Male, UK)" },
     { id: "Amy", name: "Amy (Female, UK)" },
   ];
+
+  // Fetch rate limit status on mount
+  useEffect(() => {
+    const fetchRateLimit = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/rate-limit-status`);
+        if (response.ok) {
+          const remainingHeader = response.headers.get('X-RateLimit-Remaining');
+          if (remainingHeader) {
+            setRemaining(parseInt(remainingHeader));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch rate limit:', err);
+      }
+    };
+    fetchRateLimit();
+  }, []);
 
   const handleSynthesize = async () => {
     if (!text.trim()) {
@@ -173,13 +191,11 @@ export default function Home() {
       </div>
 
       {/* Usage counter - bottom left */}
-      {remaining !== null && (
-        <div className="fixed bottom-6 left-6 px-4 py-2 rounded-lg gradient-bg card-shadow backdrop-blur-sm">
-          <p className="text-xs" style={{ color: 'hsl(var(--text-muted))' }}>
-            Requests remaining: <span className="font-bold text-sm">{remaining}/10</span>
-          </p>
-        </div>
-      )}
+      <div className="fixed bottom-6 left-6 px-4 py-2 rounded-lg gradient-bg card-shadow backdrop-blur-sm">
+        <p className="text-xs" style={{ color: 'hsl(var(--text-muted))' }}>
+          Requests remaining: <span className="font-bold text-sm">{remaining}/10</span>
+        </p>
+      </div>
     </main>
   );
 }
