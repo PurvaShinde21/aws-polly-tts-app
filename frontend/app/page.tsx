@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ThemeToggle } from "./components/ThemeToggle";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -67,7 +69,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen gradient-bg flex items-center justify-center p-6">
-      <ThemeToggle />
       
       <div className="w-full max-w-2xl">
         <div className="gradient-button card-shadow rounded-2xl p-8 backdrop-blur-sm">
