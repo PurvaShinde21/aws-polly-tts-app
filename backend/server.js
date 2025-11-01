@@ -8,7 +8,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // CORS configuration
-app.use(cors());
+app.use(cors({
+  exposedHeaders: ['RateLimit-Limit', 'RateLimit-Remaining', 'RateLimit-Reset']
+}));
 app.use(express.json());
 
 // Rate limiting: 10 requests per day per IP
@@ -66,10 +68,14 @@ app.post('/api/speech', limiter, async (req, res) => {
 
     const response = await pollyClient.send(command);
     
+    // Get rate limit info from headers set by express-rate-limit
+    const remaining = res.getHeader('RateLimit-Remaining') || '0';
+    
     // Stream audio back to client
     res.set({
       'Content-Type': 'audio/mpeg',
       'Content-Disposition': 'inline',
+      'X-Requests-Remaining': remaining,
     });
 
     const audioStream = response.AudioStream;

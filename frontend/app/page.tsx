@@ -30,7 +30,8 @@ export default function Home() {
       try {
         const response = await fetch(`${BACKEND_URL}/api/rate-limit-status`);
         if (response.ok) {
-          const remainingHeader = response.headers.get('X-RateLimit-Remaining');
+          const remainingHeader = response.headers.get('RateLimit-Remaining') || 
+                                  response.headers.get('ratelimit-remaining');
           if (remainingHeader) {
             setRemaining(parseInt(remainingHeader));
           }
@@ -76,7 +77,9 @@ export default function Home() {
       setAudioUrl(url);
 
       // Update remaining requests from response headers
-      const remainingHeader = response.headers.get('X-RateLimit-Remaining');
+      const remainingHeader = response.headers.get('X-Requests-Remaining') ||
+                              response.headers.get('RateLimit-Remaining') ||
+                              response.headers.get('ratelimit-remaining');
       if (remainingHeader) {
         setRemaining(parseInt(remainingHeader));
       }
