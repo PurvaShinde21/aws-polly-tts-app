@@ -107,14 +107,14 @@ export default function Home() {
           {/* Text input */}
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium">
-              Text (max 3000 characters)
+              Text (max 200 characters)
             </label>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Enter text to convert to speech..."
-              rows={6}
-              maxLength={3000}
+              rows={4}
+              maxLength={200}
               className="w-full px-4 py-3 rounded-lg gradient-bg card-shadow 
                          border-2 transition-all focus:outline-none focus:ring-2 
                          focus:ring-blue-500 resize-none"
@@ -124,7 +124,7 @@ export default function Home() {
               }}
             />
             <div className="text-sm mt-2" style={{ color: 'hsl(var(--text-muted))' }}>
-              {text.length} / 3000 characters
+              {text.length} / 200 characters
             </div>
           </div>
 

@@ -55,15 +55,15 @@ app.post('/api/speech', limiter, async (req, res) => {
     }
 
     // Limit text length to prevent abuse
-    if (text.length > 3000) {
-      return res.status(400).json({ error: 'Text too long. Maximum 3000 characters.' });
+    if (text.length > 200) {
+      return res.status(400).json({ error: 'Text too long. Maximum 200 characters.' });
     }
 
     const command = new SynthesizeSpeechCommand({
       Text: text,
       OutputFormat: 'mp3',
       VoiceId: voice,
-      Engine: 'neural', // Use neural engine for better quality
+      Engine: 'standard', // Use standard engine for cost efficiency
     });
 
     const response = await pollyClient.send(command);
