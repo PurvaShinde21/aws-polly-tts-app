@@ -13,6 +13,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [remaining, setRemaining] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const voices = [
@@ -56,6 +57,12 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
 
+      // Update remaining requests from response headers
+      const remainingHeader = response.headers.get('X-RateLimit-Remaining');
+      if (remainingHeader) {
+        setRemaining(parseInt(remainingHeader));
+      }
+
       // Auto-play
       setTimeout(() => {
         audioRef.current?.play();
@@ -68,7 +75,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen gradient-bg flex items-center justify-center p-6">
+    <main className="min-h-screen gradient-bg flex items-center justify-center p-6 relative">
       
       <div className="w-full max-w-2xl">
         <div className="gradient-button card-shadow rounded-2xl p-8 backdrop-blur-sm">
@@ -160,10 +167,19 @@ export default function Home() {
 
           {/* Rate limit notice */}
           <p className="text-xs mt-6 text-center" style={{ color: 'hsl(var(--text-muted))' }}>
-            Limited to 12 requests per day per IP address
+            Limited to 10 requests per day per IP address
           </p>
         </div>
       </div>
+
+      {/* Usage counter - bottom left */}
+      {remaining !== null && (
+        <div className="fixed bottom-6 left-6 px-4 py-2 rounded-lg gradient-bg card-shadow backdrop-blur-sm">
+          <p className="text-xs" style={{ color: 'hsl(var(--text-muted))' }}>
+            Requests remaining: <span className="font-bold text-sm">{remaining}/10</span>
+          </p>
+        </div>
+      )}
     </main>
   );
 }

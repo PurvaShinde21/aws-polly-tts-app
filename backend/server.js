@@ -11,11 +11,11 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Rate limiting: 12 requests per day per IP
+// Rate limiting: 10 requests per day per IP
 const limiter = rateLimit({
   windowMs: 24 * 60 * 60 * 1000, // 24 hours
-  max: 12, // 12 requests per day
-  message: { error: 'Rate limit exceeded. You can only make 12 requests per day.' },
+  max: 10, // 10 requests per day
+  message: { error: 'Rate limit exceeded. You can only make 10 requests per day.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -32,6 +32,15 @@ const pollyClient = new PollyClient({
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Polly TTS API is running' });
+});
+
+// Rate limit status endpoint
+app.get('/api/rate-limit-status', limiter, (req, res) => {
+  res.json({
+    limit: 10,
+    remaining: 10,
+    used: 0
+  });
 });
 
 // TTS endpoint with rate limiting
@@ -80,5 +89,5 @@ app.post('/api/speech', limiter, async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Polly TTS Backend running on port ${PORT}`);
-  console.log(`⚡ Rate limit: 12 requests per day per IP`);
+  console.log(`⚡ Rate limit: 10 requests per day per IP`);
 });
