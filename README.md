@@ -4,11 +4,11 @@ A beautiful, minimal text-to-speech web application using Amazon Polly with dark
 
 ## Features
 
-- 🎨 **Dark & Light Mode** with smooth transitions and HSL color system
-- 🎙️ **Amazon Polly Integration** with neural voices
-- 🔒 **Rate Limiting**: 10 requests per day per IP (perfect for demos)
-- 📱 **Responsive Design** with gradients and shadows
-- ⚡ **Free Tier Hosting** on Vercel + Render
+-  **Amazon Polly Integration** with standard voices
+-  **Rate Limiting**: 10 requests per day per IP (perfect for demos)
+-  **Responsive Design** with gradients and shadows
+-  **Free Tier Hosting** on Vercel + Render
+-  **Dark & Light Mode** with smooth transitions and HSL color system
 
 ## Project Structure
 
@@ -184,4 +184,5 @@ Visit `http://localhost:3000`
 ## License
 
 MIT
+
 
