@@ -1,6 +1,6 @@
 # Polly TTS Web App
 
-A beautiful, minimal text-to-speech web application using Amazon Polly with dark/light mode support.
+A minimal text-to-speech web application using Amazon Polly with dark/light mode support.
 
 ## Features
 
@@ -184,5 +184,6 @@ Visit `http://localhost:3000`
 ## License
 
 MIT
+
 
 
