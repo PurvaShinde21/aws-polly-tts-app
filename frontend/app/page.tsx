@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
@@ -13,7 +13,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [remaining, setRemaining] = useState<number>(10);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const voices = [
@@ -24,24 +23,6 @@ export default function Home() {
     { id: "Amy", name: "Amy (Female, UK)" },
   ];
 
-  // Fetch rate limit status on mount
-  useEffect(() => {
-    const fetchRateLimit = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/rate-limit-status`);
-        if (response.ok) {
-          const remainingHeader = response.headers.get('RateLimit-Remaining') || 
-                                  response.headers.get('ratelimit-remaining');
-          if (remainingHeader) {
-            setRemaining(parseInt(remainingHeader));
-          }
-        }
-      } catch (err) {
-        console.error('Failed to fetch rate limit:', err);
-      }
-    };
-    fetchRateLimit();
-  }, []);
 
   const handleSynthesize = async () => {
     if (!text.trim()) {
@@ -75,14 +56,6 @@ export default function Home() {
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
-
-      // Update remaining requests from response headers
-      const remainingHeader = response.headers.get('X-Requests-Remaining') ||
-                              response.headers.get('RateLimit-Remaining') ||
-                              response.headers.get('ratelimit-remaining');
-      if (remainingHeader) {
-        setRemaining(parseInt(remainingHeader));
-      }
 
       // Auto-play
       setTimeout(() => {
@@ -186,18 +159,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* Rate limit notice */}
-          <p className="text-xs mt-6 text-center" style={{ color: 'hsl(var(--text-muted))' }}>
-            Limited to 10 requests per day per IP address
-          </p>
         </div>
-      </div>
-
-      {/* Usage counter - bottom left */}
-      <div className="fixed bottom-6 left-6 px-4 py-2 rounded-lg gradient-bg card-shadow backdrop-blur-sm">
-        <p className="text-xs" style={{ color: 'hsl(var(--text-muted))' }}>
-          Requests remaining: <span className="font-bold text-sm">{remaining}/10</span>
-        </p>
       </div>
     </main>
   );
