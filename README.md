@@ -26,8 +26,8 @@ polly-tts-app/
     │   ├── page.tsx
     │   ├── layout.tsx
     │   └── globals.css
-    ├── package.json
-    └── .env.local.example
+    └── package.json
+   
 ```
 
 ## Setup Instructions
@@ -184,6 +184,7 @@ Visit `http://localhost:3000`
 ## License
 
 MIT
+
 
 
 
